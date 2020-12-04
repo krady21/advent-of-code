@@ -1,7 +1,27 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-// TODO: Make a macro to avoid repeating code
+macro_rules! slope {
+    ($iter:expr, $right:expr, $down:expr) => {
+        $iter.filter(|(i, vector)| {
+            if i % $down == 0 {
+                let mut position = i * $right / $down;
+                while position > 30 {
+                    position -= 31;
+                }
+
+                if vector[position] == 1 {
+                    true
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        })
+        .count() as u64
+    }
+}
 
 fn main() -> std::io::Result<()> {
     let file = File::open("input.txt")?;
@@ -25,94 +45,18 @@ fn main() -> std::io::Result<()> {
         .enumerate()
         .collect();
 
-    let slope11 = trees
-        .iter()
-        .filter(|(i, vector)| {
-            let mut position = i * 1;
-            while position > 30 {
-                position -= 31;
-            }
-
-            if vector[position] == 1 {
-                true
-            } else {
-                false
-            }
-        })
-        .count() as u64;
-
-    let slope31 = trees
-        .iter()
-        .filter(|(i, vector)| {
-            let mut position = i * 3;
-            while position > 30 {
-                position -= 31;
-            }
-
-            if vector[position] == 1 {
-                true
-            } else {
-                false
-            }
-        })
-        .count() as u64;
-
-    let slope51: u64 = trees
-        .iter()
-        .filter(|(i, vector)| {
-            let mut position = i * 5;
-            while position > 30 {
-                position -= 31;
-            }
-
-            if vector[position] == 1 {
-                true
-            } else {
-                false
-            }
-        })
-        .count() as u64;
-
-    let slope71 = trees
-        .iter()
-        .filter(|(i, vector)| {
-            let mut position = i * 7;
-            while position > 30 {
-                position -= 31;
-            }
-
-            if vector[position] == 1 {
-                true
-            } else {
-                false
-            }
-        })
-        .count() as u64;
-
-    let slope12 = trees
-        .iter()
-        .filter(|(i, vector)| {
-            if i % 2 == 0 {
-                let mut position = i / 2;
-                while position > 30 {
-                    position -= 31;
-                }
-
-                if vector[position] == 1 {
-                    true
-                } else {
-                    false
-                }
-            } else {
-                false
-            }
-        })
-        .count() as u64;
+    let slope11 = slope!(trees.iter(), 1, 1);
+    let slope31 = slope!(trees.iter(), 3, 1);
+    let slope51 = slope!(trees.iter(), 5, 1);
+    let slope71 = slope!(trees.iter(), 7, 1);
+    let slope12 = slope!(trees.iter(), 1, 2);
 
     let product: u64 = slope11 * slope31 * slope51 * slope71 * slope12;
 
     println!("{} {} {} {} {}", slope11, slope31, slope51, slope71, slope12);
     println!("Task 1: The number of trees is {}", slope31);
     println!("Task 2: The product of the number trees is {}", product);
+
     Ok(())
+
 }
