@@ -348,9 +348,7 @@ fn task1(input: &Vec<Vec<char>>) -> usize {
 fn task2(input: &Vec<Vec<char>>) -> usize {
     let mut copy = input.clone();
     let mut copy2 = input.clone();
-    let mut sum = 0;
     loop {
-        sum += 1;
         let mut flag = false;
         for i in 1..copy.len() - 1 {
             for j in 1..copy[0].len() - 1 {
